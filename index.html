@@ -14,12 +14,12 @@
     <h1>Salaray Calculator</h1>
 
     <h2>Add Employee</h2>
-    <form>
-        <input id="firsNameInput" type="text" placeholder="First Name" required>
-        <input id="lastNameInput" type="text" placeholder="Last Name" required>
-        <input id="employeeNumberInput" type="number" placeholder="ID" required>
-        <input id="jobTitleInput" type="text" placeholder="Title" required>
-        <input id="annualSalaryInput" type="number" placeholder="Annual Salary" required>
+    <form id="employeeInputForm">
+        <input id="firsNameInput" type="text" placeholder="First Name" >
+        <input id="lastNameInput" type="text" placeholder="Last Name" >
+        <input id="employeeNumberInput" type="number" placeholder="ID" >
+        <input id="jobTitleInput" type="text" placeholder="Title" >
+        <input id="annualSalaryInput" type="number" placeholder="Annual Salary" >
         <input type="submit">
     </form>
 
@@ -31,9 +31,20 @@
                 <td>Last Name</td>
                 <td>ID</td>
                 <td>Title</td>
+                <td>Annual Salary</td>
                 <td> :trash: </td>
             </tr>
         </thead>
+        <tbody id="tableBody">
+            <tr>
+                <td>Jacob</td>
+                <td>Larson</td>
+                <td>420</td>
+                <td>Executive Beer Crusher</td>
+                <td>$69,000,000</td>
+                <td> :trash: </td>
+            </tr>
+        </tbody>
     </table>
 
     <h3 id="totalMonthlyDisplay">Total Monthly:</h3>
