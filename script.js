@@ -55,7 +55,7 @@ function addEmployeeToDataBase(){
     it changes our loadedPage flag to true, which should break the for loop after page load
     only allowing the first object to be appended to the DOM
  The SVG tag contains a trash can item to be used as a button for removing employees
- There is also a .data() method being added to the SVG tag. it utilizes the employee number
+ There is also a .data() method being added to the <TR> tag. it utilizes the employee number
     as there should be no duplicates of these, and attached to it, is the salary of the 
     employee. This will be used to reduce the totalAnnualSalary in the event of employee removal.
  */
@@ -64,14 +64,14 @@ function displayEmployeeToDom(){
     for(let employee of employeeDataBase){
         totalAnnualSalary += Number(employee.annualSalary);
         $('#tableBody').append(
-            `<tr>
+            `<tr id="${employee.employeeNumber}" data-salary="${employee.annualSalary}">
                 <td>${employee.firstName}</td>
                 <td>${employee.lastName}</td>
                 <td>${employee.employeeNumber}</td>
                 <td>${employee.jobTitle}</td>
                 <td>${formatter.format(employee.annualSalary)}</td>
                 <td>
-                    <svg id="${employee.employeeNumber}" data-salary="${employee.annualSalary}"
+                    <svg 
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                         <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -79,7 +79,6 @@ function displayEmployeeToDom(){
                 </td>
             </tr>`);
             overBudgetEvent();
-            $('#totalMonthlyDisplay').text(`Total Monthly: ${formatter.format(totalAnnualSalary)}`);
             loadProgress++
             $('.inputFeild').val('');
         if(loadedPage){
@@ -114,6 +113,7 @@ function overBudgetEvent(){
         $("footer").css("background-color", "antiquewhite");
         $("footer").css("color", "var(--bs-body-color)");
     }
+    $('#totalMonthlyDisplay').text(`Total Monthly: ${formatter.format(totalAnnualSalary)}`);
 }
 
 
@@ -124,20 +124,28 @@ function overBudgetEvent(){
 We then replace the monthly total text on the DOM,
     remove the table row, and trigger our overBudgetEvent
     since we are messing with the totalAnnualSalary variable
+Then we will remove the employee from database;   ----->    ?? Was this a dumb use of a for..of.. loop? 
+                                                            I know I could've use a for..in.. loop, but this seemed easier to read
  */
 function removeEmployee(){
-    totalAnnualSalary -= Number($(this).data('salary'));
-    $('#totalMonthlyDisplay').text(`Total Monthly: ${formatter.format(totalAnnualSalary)}`);
+    totalAnnualSalary -= Number($(this).parents('tr').data('salary'));
     $(this).parents('tr').remove();
     overBudgetEvent()
+    let index = -1;
+    for(let employee of employeeDataBase){
+        index++;
+        if(employee.employeeNumber === $(this).parents('tr').attr('id')){
+            employeeDataBase.splice(index,  1);
+        }
+    }
 }
 
 
-
+//Stole this from stackoverflow, honestly not 100% sure how it works. 
+//It seems to act like a function so I put it at the bottom.
+//https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings
 var formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     maximumFractionDigits: 0,
-    //SUPERSTOLEN from stackoverflow
-    //https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings
   });
