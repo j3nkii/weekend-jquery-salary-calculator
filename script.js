@@ -154,9 +154,6 @@ function removeEmployee(){
 //no, create new ID's then create toggle variable
 //make func reset table when togle off using click
 function editEmployee(){
-    
-    let updatedEmployee = $('.editEmployeeFromDOM').val();
-    let employeeNumber = $(this).parents('tr').attr('id')
     if(!editorMode){
     $(this).parent()
         .siblings(".employeeSalary")
@@ -180,7 +177,10 @@ function editEmployee(){
                 console.log(currentEmployee);
             }
         }
-        //upload to DOM
+        loadedPage = false;
+        $('#tableBody').empty();
+        displayEmployeeToDom();
+        overBudgetEvent();
     }
 }
 
