@@ -51,3 +51,8 @@ main{
     background-color: white;
     margin: auto;
 }
+
+#editEmployeeSalary{
+    width: 60%;
+    display: inline;
+}
