@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    background-color: antiquewhite;
 }
 h1{
     background-color: grey;
@@ -45,4 +46,8 @@ footer{
 }
 main{
     margin-bottom: 65px;
+    width: 70%;
+    height: 85vh;
+    background-color: white;
+    margin: auto;
 }
