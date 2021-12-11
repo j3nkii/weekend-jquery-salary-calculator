@@ -47,7 +47,7 @@ footer{
 main{
     margin-bottom: 65px;
     width: 70%;
-    height: 85vh;
+    min-height: 85vh;
     background-color: white;
     margin: auto;
 }

@@ -1,4 +1,4 @@
-//Script for index
+//Global variables used throught the functions
 let employeeDataBase = [
     {
         firstName: 'Jacob',
@@ -13,21 +13,55 @@ let employeeDataBase = [
         employeeNumber: '421',
         jobTitle: 'Cocktail Tester',
         annualSalary: 6899,
-    }
+    },
 ];
-
 let totalAnnualSalary = 0;
-
-
+let loadedPage = false;
+//end global variables
 
 $(ready);
 function ready(){
-    console.log('readyIsGo');
-    $(document).on('submit', '#employeeInputForm', addEmployeeToDataBase);
-    $(document).on('click', 'svg', removeEmployee);
-    //load database to DOM on initiation
+    $(document).on('submit', '#employeeInputForm', addEmployeeToDataBase);      //event listener for adding employees after DOM is loaded
+    $(document).on('click', 'svg', removeEmployee);                            //event listener for removing employees after DOM is loaded
+    displayEmployeeToDom();                                                   //load database to DOM on initiation
+}
+
+
+
+/*
+ Here we have a function that gathers values from DOM
+ Then adds to BEGINING of an object located in our database of employees
+ We're doing this so when displayEmployeeToDom function breaks after the page load
+ It will append the new Object (the one we just put in) since it is located at the begining
+ */
+function addEmployeeToDataBase(){
+    event.preventDefault();
+    employeeDataBase.unshift({
+        firstName: $('#firsNameInput').val(),
+        lastName: $('#lastNameInput').val(),
+        employeeNumber: $('#employeeNumberInput').val(),
+        jobTitle: $('#jobTitleInput').val(),
+        annualSalary: Number($('#annualSalaryInput').val()),
+    });
+    displayEmployeeToDom();
+}
+
+
+
+/**
+ This functions purpose it to load script to the DOM
+ There is a loop going through the database to collect data and generate to HTML
+ There is a loadProgress variable, that when it reaches the length
+    it changes our loadedPage flag to true, which should break the for loop after page load
+    only allowing the first object to be appended to the DOM
+ The SVG tag contains a trash can item to be used as a button for removing employees
+ There is also a .data() method being added to the SVG tag. it utilizes the employee number
+    as there should be no duplicates of these, and attached to it, is the salary of the 
+    employee. This will be used to reduce the totalAnnualSalary in the event of employee removal.
+ */
+function displayEmployeeToDom(){
+    let loadProgress = 0;
     for(let employee of employeeDataBase){
-        //addup total
         totalAnnualSalary += Number(employee.annualSalary);
         $('#tableBody').append(
             `<tr>
@@ -44,66 +78,58 @@ function ready(){
                     </svg>
                 </td>
             </tr>`);
+            overBudgetEvent();
             $('#totalMonthlyDisplay').text(`Total Monthly: ${formatter.format(totalAnnualSalary)}`);
-            overBudgetEvent()
-    
+            loadProgress++
+            $('.inputFeild').val('');
+        if(loadedPage){
+            break;
+        } else {
+            console.log(`Loading ${loadProgress} of ${employeeDataBase.length}`); 
+            loadedPage = loadProgress === employeeDataBase.length 
+                ? true
+                : false;
+        }
     }
+    loadedPage && loadProgress > 1
+        ? console.log('Page loaded!')
+        : false;
 }
 
 
-function addEmployeeToDataBase(){
-    event.preventDefault();
-    //create new object and push to database
-    employeeDataBase.push({
-        firstName: $('#firsNameInput').val(),
-        lastName: $('#lastNameInput').val(),
-        employeeNumber: $('#employeeNumberInput').val(),
-        jobTitle: $('#jobTitleInput').val(),
-        annualSalary: Number($('#annualSalaryInput').val()),
-    })
-    console.log(employeeDataBase);
-    //append to DOM on addition
-    $('#tableBody').append(
-    `<tr>
-        <td>${$('#firsNameInput').val()}</td>
-        <td>${$('#lastNameInput').val()}</td>
-        <td>${$('#employeeNumberInput').val()}</td>
-        <td>${$('#jobTitleInput').val()}</td>
-        <td>${formatter.format($('#annualSalaryInput').val())}</td>
-        <td>
-            <svg id="${$('#employeeNumberInput').val()}" data-salary="${Number($('#annualSalaryInput').val())}"
-                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-            </svg>
-        </td>
-    </tr>`);
-    //update price with potential to trigger red event
-    totalAnnualSalary += Number($('#annualSalaryInput').val());
-    overBudgetEvent()
-    $('#totalMonthlyDisplay').text(`Total Monthly: ${formatter.format(totalAnnualSalary)}`);
-    console.log(employeeDataBase);
-    console.log($(this));
-    $('.inputFeild').val('');
-}
 
-
+/**
+ This function simply set the footer, which
+    contains the total monthly salaries of 
+    the employees. 
+ If over budget, it will change to Red, alerting the user
+ This should be used in any other events that add to our
+    totalAnnualSalary variable
+ */
 function overBudgetEvent(){
     if(totalAnnualSalary > 20000){
-        $("footer").css("background-color", "red")
-        $("footer").css("color", "white")
+        $("footer").css("background-color", "red");
+        $("footer").css("color", "white");
+    } else {
+        $("footer").css("background-color", "antiquewhite");
+        $("footer").css("color", "var(--bs-body-color)");
     }
 }
 
 
+
+/**
+ Here we take the data applied to the employee number tag
+    and subtract the salary from the totalAnnualSalary variable
+We then replace the monthly total text on the DOM,
+    remove the table row, and trigger our overBudgetEvent
+    since we are messing with the totalAnnualSalary variable
+ */
 function removeEmployee(){
     totalAnnualSalary -= Number($(this).data('salary'));
     $('#totalMonthlyDisplay').text(`Total Monthly: ${formatter.format(totalAnnualSalary)}`);
-    $(this).parents('tr').remove()
-    if(totalAnnualSalary <= 20000){
-        $("footer").css("background-color", "antiquewhite")
-        $("footer").css("color", "var(--bs-body-color)")
-    }
+    $(this).parents('tr').remove();
+    overBudgetEvent()
 }
 
 
