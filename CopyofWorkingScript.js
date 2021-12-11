@@ -15,6 +15,7 @@ let employeeDataBase = [
         annualSalary: 6899,
     },
 ];
+let totalAnnualSalary = 0;
 let loadedPage = false;
 let editorMode = false;
 //end global variables
@@ -26,8 +27,6 @@ function ready(){
     $(document).on('click', '.toggleEditMode', editEmployee);                 //Toggles to 'edit mode'
     $(document).on('click', '.editButton', editEmployee);                    //Attempting to make edits
     displayEmployeeToDom();                                                 //load database to DOM on initiation
-    console.log('ON LOAD');
-    console.table(employeeDataBase);
 }
 
 
@@ -47,7 +46,7 @@ function addEmployeeToDataBase(){
         jobTitle: $('#jobTitleInput').val(),
         annualSalary: Number($('#annualSalaryInput').val()),
     });
-    displayEmployeeToDom(true);
+    displayEmployeeToDom();
 }
 
 
@@ -63,9 +62,10 @@ function addEmployeeToDataBase(){
     as there should be no duplicates of these, and attached to it, is the salary of the 
     employee. This will be used to reduce the totalAnnualSalary in the event of employee removal.
  */
-function displayEmployeeToDom(bool){
+function displayEmployeeToDom(){
     let loadProgress = 0;
     for(let employee of employeeDataBase){
+        totalAnnualSalary += Number(employee.annualSalary);
         $('#tableBody').append(
             `<tr id="${employee.employeeNumber}" data-salary="${employee.annualSalary}">
                 <td>${employee.firstName}</td>
@@ -89,20 +89,18 @@ function displayEmployeeToDom(bool){
             overBudgetEvent();
             loadProgress++
             $('.inputFeild').val('');
-            console.log('ON DISPLAY');
-            console.table(employeeDataBase);
         if(loadedPage){
             break;
         } else {
-            //console.log(`Loading ${loadProgress} of ${employeeDataBase.length}`); 
+            console.log(`Loading ${loadProgress} of ${employeeDataBase.length}`); 
             loadedPage = loadProgress === employeeDataBase.length 
                 ? true
                 : false;
         }
     }
-    //loadedPage && loadProgress > 1
-    //    ? console.log('Page loaded!')
-     //   : false;
+    loadedPage && loadProgress > 1
+        ? console.log('Page loaded!')
+        : false;
 }
 
 
@@ -116,10 +114,6 @@ function displayEmployeeToDom(bool){
     totalAnnualSalary variable
  */
 function overBudgetEvent(){
-    let totalAnnualSalary = 0;
-    for(let employee of employeeDataBase){
-        totalAnnualSalary += Number(employee.annualSalary);
-    }
     if(totalAnnualSalary > 20000){
         $("footer").css("background-color", "red");
         $("footer").css("color", "white");
@@ -142,7 +136,9 @@ Then we will remove the employee from database;   ----->    ?? Was this a dumb u
                                                             I know I could've use a for..in.. loop, but this seemed easier to read
  */
 function removeEmployee(){
+    totalAnnualSalary -= Number($(this).parents('tr').data('salary'));
     $(this).parents('tr').remove();
+    overBudgetEvent()
     let index = -1;
     for(let employee of employeeDataBase){
         index++;
@@ -150,7 +146,6 @@ function removeEmployee(){
             employeeDataBase.splice(index,  1);
         }
     }
-    overBudgetEvent();
 }
 
 
@@ -172,24 +167,21 @@ function editEmployee(){
     editorMode = true;
     } else {
         let currentEmployee;
-        let updatedEmployee = Number($('.editEmployeeFromDOM').val());
-        let employeeNumber = $(this).parents('tr').attr('id');
+        let updatedEmployee = $('.editEmployeeFromDOM').val();
+        let employeeNumber = $(this).parents('tr').attr('id')
+        console.log(updatedEmployee)
         for(let employee of employeeDataBase){
             if(employeeNumber === employee.employeeNumber){
                 employee.annualSalary = updatedEmployee
                 currentEmployee = employee
+                console.log(currentEmployee);
             }
         }
         loadedPage = false;
         $('#tableBody').empty();
         displayEmployeeToDom();
-        console.log('onEdit',employeeDataBase)
         overBudgetEvent();
-        loadedPage = true;
-        editorMode = false;
     }
-    console.log('ON ADD');
-    console.table(employeeDataBase);
 }
 
 
