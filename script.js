@@ -17,15 +17,15 @@ let employeeDataBase = [
 ];
 let totalAnnualSalary = 0;
 let loadedPage = false;
-let editorMore = false;
+let editorMode = false;
 //end global variables
 
 $(ready);
 function ready(){
     $(document).on('submit', '#employeeInputForm', addEmployeeToDataBase);      //event listener for adding employees after DOM is loaded
-    $(document).on('click', '#removalButton', removeEmployee);                 //event listener for removing employees after DOM is loaded
-    $(document).on('click', '#toggleEditMode', editEmployee);                 //Toggles to 'edit mode'
-    $(document).on('click', '#editButton', editEmployee);                    //Attempting to make edits
+    $(document).on('click', '.removalButton', removeEmployee);                 //event listener for removing employees after DOM is loaded
+    $(document).on('click', '.toggleEditMode', editEmployee);                 //Toggles to 'edit mode'
+    $(document).on('click', '.editButton', editEmployee);                    //Attempting to make edits
     displayEmployeeToDom();                                                 //load database to DOM on initiation
 }
 
@@ -74,12 +74,12 @@ function displayEmployeeToDom(){
                 <td>${employee.jobTitle}</td>
                 <td class="employeeSalary">${formatter.format(employee.annualSalary)}</td>
                 <td class="employeeInteraction">
-                    <button id="removalButton"><svg 
+                    <button class="removalButton"><svg 
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                         <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
                     </svg></button>
-                    <button id="toggleEditMode"><svg 
+                    <button class="toggleEditMode"><svg 
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
                         <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
                         <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
@@ -154,22 +154,34 @@ function removeEmployee(){
 //no, create new ID's then create toggle variable
 //make func reset table when togle off using click
 function editEmployee(){
-    let updatedEmployee = $('#editEmployeeFromDOM').val();
+    
+    let updatedEmployee = $('.editEmployeeFromDOM').val();
     let employeeNumber = $(this).parents('tr').attr('id')
-    for(let employee of employeeDataBase){
-        if(employeeNumber === employee.employeeNumber){
-            console.log(true);
-        }
-    }
-
-
+    if(!editorMode){
     $(this).parent()
         .siblings(".employeeSalary")
         .empty()
-        .append('<input id="editEmployeeFromDOM" type="number">');
+        .append('<input class="editEmployeeFromDOM" type="number">');
     $(this).parent()
         .empty()
-        .append(`<button id="editButton">Commit</button>`);
+        .append(`<button class="editButton">Commit</button>`);
+        console.log('now able to edit');
+    //Toggle for function to handle edit / commit buttons
+    editorMode = true;
+    } else {
+        let currentEmployee;
+        let updatedEmployee = $('.editEmployeeFromDOM').val();
+        let employeeNumber = $(this).parents('tr').attr('id')
+        console.log(updatedEmployee)
+        for(let employee of employeeDataBase){
+            if(employeeNumber === employee.employeeNumber){
+                employee.annualSalary = updatedEmployee
+                currentEmployee = employee
+                console.log(currentEmployee);
+            }
+        }
+        //upload to DOM
+    }
 }
 
 
