@@ -4,51 +4,46 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="bootstrap.css">
     <link rel="stylesheet" href="style.css">
     <script src="jquery-3.6.0.js"></script>
     <script src="script.js"></script>
     <title>Salary Calculator</title>
 </head>
 <body>
-
     <h1>Salaray Calculator</h1>
+    <main class="content">
+        <h2>Add Employee</h2>
+        <form id="employeeInputForm">
+            <input class="inputFeild" id="firsNameInput" type="text" placeholder="First Name" >
+            <input class="inputFeild" id="lastNameInput" type="text" placeholder="Last Name" >
+            <input class="inputFeild" id="employeeNumberInput" type="number" placeholder="ID" >
+            <input class="inputFeild" id="jobTitleInput" type="text" placeholder="Title" >
+            <input class="inputFeild" id="annualSalaryInput" type="number" placeholder="Annual Salary" >
+            <br>
+            <input type="submit">
+        </form>
 
-    <h2>Add Employee</h2>
-    <form id="employeeInputForm">
-        <input id="firsNameInput" type="text" placeholder="First Name" >
-        <input id="lastNameInput" type="text" placeholder="Last Name" >
-        <input id="employeeNumberInput" type="number" placeholder="ID" >
-        <input id="jobTitleInput" type="text" placeholder="Title" >
-        <input id="annualSalaryInput" type="number" placeholder="Annual Salary" >
-        <input type="submit">
-    </form>
+        <h2>Employees</h2>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Frist Name</th>
+                    <th>Last Name</th>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Annual Salary</th>
+                    <th>Trash</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
 
-    <h2>Employees</h2>
-    <table>
-        <thead>
-            <tr>
-                <td>Frist Name</td>
-                <td>Last Name</td>
-                <td>ID</td>
-                <td>Title</td>
-                <td>Annual Salary</td>
-                <td> :trash: </td>
-            </tr>
-        </thead>
-        <tbody id="tableBody">
-            <tr>
-                <td>Jacob</td>
-                <td>Larson</td>
-                <td>420</td>
-                <td>Executive Beer Crusher</td>
-                <td>$69,000,000</td>
-                <td> :trash: </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3 id="totalMonthlyDisplay">Total Monthly:</h3>
-    
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <h3 id="totalMonthlyDisplay"></h3>
+    </footer>
 
 </body>
 </html>

@@ -1,3 +1,48 @@
 body {
     margin: 0;
 }
+h1{
+    background-color: grey;
+}
+h2{
+    background-color: antiquewhite;
+    text-align: center;
+}
+table{
+    text-align: center;
+}
+h3{
+    text-align: right;
+    padding: 6px 40px 6px;
+}
+.thead-dark{
+    color: #fff;
+    background-color: #212529;
+    border-color: #32383e;
+}
+.tooMuchMoney{
+    position: fixed;
+    margin-bottom: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 40;
+    background-color: antiquewhite;
+}
+
+input{
+    margin: 5px;
+}
+
+footer{
+    position: fixed;
+    margin-bottom: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 40;
+    background-color: antiquewhite;
+}
+main{
+    margin-bottom: 65px;
+}
