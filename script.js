@@ -5,17 +5,18 @@ let employeeDataBase = [
         lastName: 'Larson',
         employeeNumber: '420',
         jobTitle: 'Beer Tester',
-        annualSalary: 6900,
+        annualSalary: 69000,
     },
     {
         firstName: 'Selena',
         lastName: 'Orduno',
         employeeNumber: '421',
         jobTitle: 'Cocktail Tester',
-        annualSalary: 6899,
+        annualSalary: 68999,
     },
 ];
 let editorMode = false;
+let totalAnnualSalary = 0;
 //end global variables
 
 $(ready);
@@ -88,9 +89,9 @@ function displayEmployeeToDom(obj){
                     </svg></button>
                 </td>
             </tr>`);
-            budgetEvent();
             $('.inputFeild').val('');
     }
+    budgetEvent();
 }
 
 
@@ -106,46 +107,43 @@ function displayEmployeeToDom(obj){
     another reason it should be used in any other function that
     interacts with salaries
  */
-function budgetEvent(){
-    let totalAnnualSalary = 0;
-    for(let employee of employeeDataBase){
-        totalAnnualSalary += Number(employee.annualSalary);
+function budgetEvent(num){
+    if(num === undefined){
+        for(let employee of employeeDataBase){
+            totalAnnualSalary += Number(employee.annualSalary);
+        }
+    } else {
+        totalAnnualSalary += num;
+        console.log(totalAnnualSalary , num);
     }
-    if(totalAnnualSalary > 20000){
+    let monthly = Math.round(totalAnnualSalary /12)
+    if(monthly > 20000){
         $("footer").css("background-color", "red");
         $("footer").css("color", "white");
     } else {
         $("footer").css("background-color", "antiquewhite");
         $("footer").css("color", "var(--bs-body-color)");
     }
-    $('#totalMonthlyDisplay').text(`Total Monthly: ${formatter.format(totalAnnualSalary)}`);
+    $('#totalMonthlyDisplay').text(`Total Monthly: ${formatter.format(monthly)}`);
 }
 
 
 
-/**
- Here we take the data applied to the employee number tag
-    and subtract the salary from the totalAnnualSalary variable
-We then replace the monthly total text on the DOM,
-    remove the table row, and trigger our budgetEvent
-    since we are messing with the totalAnnualSalary variable
-Index being used to have an index to slice.
-
-Then we will remove the employee from database;   ----->    ?? Was this a dumb use of a for..of.. loop? 
-                                                            I know I could've use a for..in.. loop, but this seemed easier to read
+/**NEEDS COMMENTS
  */
 function removeEmployee(){
-    console.log($(this).parent().siblings('.employeeSalary').data('salary'));  ///OOHKEN EHELL M8
     $(this).parents('tr').remove();
+    console.log($(this).parent().siblings('td.employeeSalary').data('salary'));
     let index = -1;
     for(let employee of employeeDataBase){
         index++;
-        if(employee.employeeNumber === $(this).parents('tr').attr('id')){
+        if(Number(employee.employeeNumber) === $(this).parent()
+            .siblings('td.employeeNumber')
+            .data('employeenumber')){
             employeeDataBase.splice(index,  1);
-            
         }
     }
-    budgetEvent();
+    budgetEvent(-$(this).parent().siblings('td.employeeSalary').data('salary'));
 }
 
 
@@ -168,7 +166,10 @@ function editEmployee(){
     $(this).parent()
         .siblings(".employeeSalary")
         .empty()
-        .append('<input id="editEmployeeFromDOM" type="number">');
+        .append(`<input id="editEmployeeFromDOM" type="number" value="${
+            $(this).parent()
+            .siblings('.employeeSalary')
+            .data('salary')}">`);
     $(this).parent()
         .empty()
         .append(`<button class="editButton">Commit</button>`);
@@ -178,9 +179,11 @@ function editEmployee(){
     } else if(editorMode && $(this).attr('class') === 'editButton'){
         let currentEmployee;
         let updatedEmployee = Number($('#editEmployeeFromDOM').val());
-        let employeeNumber = $(this).parents('tr').attr('id');
+        let employeeNumber = $(this).parent()
+            .siblings('td.employeeNumber')
+            .data('employeenumber');
         for(let employee of employeeDataBase){
-            if(employeeNumber === employee.employeeNumber){
+            if(employeeNumber === Number(employee.employeeNumber)){
                 currentEmployee = employee;
                 currentEmployee.annualSalary = updatedEmployee;
             }
@@ -189,6 +192,9 @@ function editEmployee(){
         .siblings(".employeeSalary")
         .empty()
         .text(`${formatter.format(currentEmployee.annualSalary)}`);
+        $(this).parent()
+        .siblings(".employeeSalary")
+        .data('salary', currentEmployee.annualSalary)
         $(this).parent()
         .empty()
         .append(`<button class="removalButton"><svg 
