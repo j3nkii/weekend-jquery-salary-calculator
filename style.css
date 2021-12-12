@@ -1,6 +1,7 @@
 body {
     margin: 0;
     background-color: #aecbf5b8;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 h1{
     background-color: #212529;
@@ -76,4 +77,3 @@ main{
 .submitContainer{
     align-self: center;
 }
-
