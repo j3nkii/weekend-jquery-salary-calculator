@@ -60,7 +60,7 @@ main{
     min-height: 88vh;
     background-color: antiquewhite;
     margin: auto;
-    margin-bottom: 54px;
+    padding-bottom: 23px;
 }
 #editEmployeeSalary{
     width: 60%;
@@ -76,4 +76,29 @@ main{
 }
 .submitContainer{
     align-self: center;
+}
+
+#lilLine{
+    align-self: center;
+    background-color: black;
+    width: 90%;
+    height: 3px;
+    margin: auto;
+    margin-bottom: 4px;
+    margin-top: 7px;
+}
+
+#bigLine{
+    justify-self: center;
+    background-color: black;
+    width: 90%;
+    height: 6px;
+    margin: auto;
+}
+
+#tableOfEmployees{
+    background-color: white;
+    width: 94%;
+    margin: auto;
+    margin-bottom: 48px;
 }
