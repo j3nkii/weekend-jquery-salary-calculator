@@ -1,12 +1,17 @@
 body {
     margin: 0;
-    background-color: antiquewhite;
+    background-color: #aecbf5b8;
 }
 h1{
-    background-color: grey;
+    background-color: #212529;
+    color: #fff;
+    margin-bottom: 0;
+    text-align: center;
 }
 h2{
-    background-color: antiquewhite;
+    text-align: center;
+    margin-bottom: 0px;
+    padding: 1rem 0 1rem 0;
 }
 table{
     text-align: center;
@@ -39,33 +44,36 @@ input{
 }
 
 footer{
+    padding-right: 15%;
     position: fixed;
     margin-bottom: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
     height: 40;
-    background-color: antiquewhite;
+    background-color: #212529;
+    color: #fff;
 }
 main{
-    margin-bottom: 65px;
     width: 70%;
-    min-height: 85vh;
-    background-color: white;
+    min-height: 88vh;
+    background-color: antiquewhite;
     margin: auto;
-    margin-bottom: 64px;
+    margin-bottom: 54px;
 }
-
 #editEmployeeSalary{
     width: 60%;
     display: inline;
 }
 #employeeInputForm{
+    margin: auto;
+    background-color: antiquewhite;
+    width: fit-content;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-items: center;
+}
+.submitContainer{
+    align-self: center;
 }
 
-.submitButton{
-    break-before: always;
-}

@@ -21,12 +21,12 @@ let totalAnnualSalary = 0;
 
 $(ready);
 function ready(){
-    $(document).on('submit', '#employeeInputForm', addEmployeeToDataBase);      //event listener for adding employees after DOM is loaded
-    $(document).on('click', '.removalButton', removeEmployee);                 //event listener for removing employees after DOM is loaded
-    $(document).on('click', '.toggleEditMode', editEmployee);                 //Toggles to 'edit mode' which switcher table text to <inputs>
-    $(document).on('click', '.editButton', editEmployee);                    //Used to edit employees in table when pressing the commit button
-    displayEmployeeToDom();                                                 //load database to DOM on initiation
-    budgetEvent();
+    $(document).on('submit', '#employeeInputForm', addEmployeeToDataBase);  //event listener for adding employees after DOM is loaded
+    $(document).on('click', '.removalButton', removeEmployee);             //event listener for removing employees after DOM is loaded
+    $(document).on('click', '.toggleEditMode', editEmployee);             //Toggles to 'edit mode' which switcher table text to <inputs>
+    $(document).on('click', '.editButton', editEmployee);                //Used to edit employees in table when pressing the commit button
+    displayEmployeeToDom();                                             //load database to DOM on initiation
+    budgetEvent();                                                     //load monthly budget to DOM
 }
 
 
@@ -128,8 +128,8 @@ function budgetEvent(num){
         $("footer").css("background-color", "red");
         $("footer").css("color", "white");
     } else {
-        $("footer").css("background-color", "antiquewhite");
-        $("footer").css("color", "var(--bs-body-color)");
+        $("footer").css("background-color", "#212529");
+        $("footer").css("color", "#fff");
     }
     $('#totalMonthlyDisplay').text(`Total Monthly: ${formatter.format(monthly)}`);
 }
@@ -156,7 +156,6 @@ function removeEmployee(){
             employeeDataBase.splice(index,  1);
         }
     }
-    
 }
 
 
