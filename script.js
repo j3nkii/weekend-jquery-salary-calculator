@@ -28,12 +28,13 @@ function ready(){
 }
 
 
-
 /*
 This function takes in values from DOM, adds them
      to the database, and then utilized the 
      display function, passing the object
      to be rendered to DOM
+
+Could also use a for loop to search through existing ID's to prevent duplicates
  */
 function addEmployeeToDataBase(){
     event.preventDefault();
@@ -64,16 +65,16 @@ function addEmployeeToDataBase(){
  */
 function displayEmployeeToDom(obj){
     let arr = obj !== undefined
-        ? Array(arr)
+        ? Array(obj)
         : employeeDataBase;
     for(let employee of arr){
         $('#tableBody').append(
-            `<tr id="${employee.employeeNumber}" data-salary="${employee.annualSalary}">
-                <td>${employee.firstName}</td>
-                <td>${employee.lastName}</td>
-                <td>${employee.employeeNumber}</td>
-                <td>${employee.jobTitle}</td>
-                <td class="employeeSalary">${formatter.format(employee.annualSalary)}</td>
+            `<tr>
+                <td class="firstName" data-firstname="${employee.firstName}">${employee.firstName}</td>
+                <td class="lastName" data-lastname="${employee.lastName}">${employee.lastName}</td>
+                <td class="employeeNumber" data-employeenumber="${employee.employeeNumber}">${employee.employeeNumber}</td>
+                <td class="jobTitle" data-jobtitle="${employee.jobTitle}">${employee.jobTitle}</td>
+                <td class="employeeSalary" data-salary="${employee.annualSalary}">${formatter.format(employee.annualSalary)}</td>
                 <td class="employeeInteraction">
                     <button class="removalButton"><svg 
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -128,16 +129,20 @@ function budgetEvent(){
 We then replace the monthly total text on the DOM,
     remove the table row, and trigger our budgetEvent
     since we are messing with the totalAnnualSalary variable
+Index being used to have an index to slice.
+
 Then we will remove the employee from database;   ----->    ?? Was this a dumb use of a for..of.. loop? 
                                                             I know I could've use a for..in.. loop, but this seemed easier to read
  */
 function removeEmployee(){
+    console.log($(this).parent().siblings('.employeeSalary').data('salary'));  ///OOHKEN EHELL M8
     $(this).parents('tr').remove();
     let index = -1;
     for(let employee of employeeDataBase){
         index++;
         if(employee.employeeNumber === $(this).parents('tr').attr('id')){
             employeeDataBase.splice(index,  1);
+            
         }
     }
     budgetEvent();
