@@ -102,3 +102,11 @@ main{
     margin: auto;
     margin-bottom: 48px;
 }
+#editEmployeeFromDOM{
+    border: none;
+    background-color: #6c757d;
+    border-color: #6c757d;
+    margin: 0;
+    padding: 0;
+    max-width: 6rem;
+}
