@@ -34,7 +34,6 @@ h1{
     height: 40;
     background-color: antiquewhite;
 }
-
 input{
     margin: 5px;
 }
@@ -54,9 +53,19 @@ main{
     min-height: 85vh;
     background-color: white;
     margin: auto;
+    margin-bottom: 64px;
 }
 
 #editEmployeeSalary{
     width: 60%;
     display: inline;
+}
+#employeeInputForm{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.submitButton{
+    break-before: always;
 }

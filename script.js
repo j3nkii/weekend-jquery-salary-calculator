@@ -15,7 +15,6 @@ let employeeDataBase = [
         annualSalary: 6899,
     },
 ];
-let loadedPage = false;
 let editorMode = false;
 //end global variables
 
@@ -23,50 +22,51 @@ $(ready);
 function ready(){
     $(document).on('submit', '#employeeInputForm', addEmployeeToDataBase);      //event listener for adding employees after DOM is loaded
     $(document).on('click', '.removalButton', removeEmployee);                 //event listener for removing employees after DOM is loaded
-    $(document).on('click', '.toggleEditMode', editEmployee);                 //Toggles to 'edit mode'
-    $(document).on('click', '.editButton', editEmployee);                    //Attempting to make edits
+    $(document).on('click', '.toggleEditMode', editEmployee);                 //Toggles to 'edit mode' which switcher table text to <inputs>
+    $(document).on('click', '.editButton', editEmployee);                    //Used to edit employees in table when pressing the commit button
     displayEmployeeToDom();                                                 //load database to DOM on initiation
 }
 
 
 
 /*
- Here we have a function that gathers values from DOM
- Then adds to BEGINING of an object located in our database of employees
- We're doing this so when displayEmployeeToDom function breaks after the page load
- It will append the new Object (the one we just put in) since it is located at the begining
+This function takes in values from DOM, adds them
+     to the database, and then utilized the 
+     display function, passing the object
+     to be rendered to DOM
  */
 function addEmployeeToDataBase(){
     event.preventDefault();
-    employeeDataBase.unshift({
+    let additionalEmployee = {
         firstName: $('#firsNameInput').val(),
         lastName: $('#lastNameInput').val(),
         employeeNumber: $('#employeeNumberInput').val(),
         jobTitle: $('#jobTitleInput').val(),
         annualSalary: Number($('#annualSalaryInput').val()),
-    });
-    displayEmployeeToDom(true);
+    }
+    employeeDataBase.push(additionalEmployee);
+    displayEmployeeToDom(additionalEmployee);
 }
 
 
 
 /**
- This functions purpose it to load script to the DOM
- There is a loop going through the database to collect data and generate to HTML
- There is a loadProgress variable, that when it reaches the length
-    it changes our loadedPage flag to true, which should break the for loop after page load
-    only allowing the first object to be appended to the DOM
+ This functions purpose it to load script to the DOM.
+ There is a loop going through the database to collect data and generate to HTML,
+    if the function is given an object, which it should everytime except on page load,
+    it will convert it to an array, then it can be given to the for loop to be rendered to DOM.
+    (the for loop in only utilized on page load)
  The SVG tag contains a trash can item to be used as a button for removing employees
+    as well as a little document icon that is uded for editing
  There is also a .data() method being added to the <TR> tag. it utilizes the employee number
     as there should be no duplicates of these, and attached to it, is the salary of the 
     employee. This will be used to reduce the totalAnnualSalary in the event of employee removal.
-
-    could rebuild function to take an object as a paramet and use a ternary to set the 
-    iterated array to one with only the object or the globaldatabase, which will not pass a parameter on load
  */
-function displayEmployeeToDom(bool){
-    let loadProgress = 0;
-    for(let employee of employeeDataBase){
+function displayEmployeeToDom(obj){
+    let arr = obj !== undefined
+        ? Array(arr)
+        : employeeDataBase;
+    for(let employee of arr){
         $('#tableBody').append(
             `<tr id="${employee.employeeNumber}" data-salary="${employee.annualSalary}">
                 <td>${employee.firstName}</td>
@@ -87,30 +87,25 @@ function displayEmployeeToDom(bool){
                     </svg></button>
                 </td>
             </tr>`);
-            overBudgetEvent();
-            loadProgress++
+            budgetEvent();
             $('.inputFeild').val('');
-        if(loadedPage){
-            break;
-        } else {
-            loadedPage = loadProgress === employeeDataBase.length 
-                ? true
-                : false;
-        }
     }
 }
 
 
 
 /**
- This function simply set the footer, which
+ This function sets the footer, which
     contains the total monthly salaries of 
     the employees. 
- If over budget, it will change to Red, alerting the user
+ If over budget, it will change to Red, alerting the user.
  This should be used in any other events that add to our
-    totalAnnualSalary variable
+    totalAnnualSalary variable.
+ It also now adds all salaries in database and appends to the DOM,
+    another reason it should be used in any other function that
+    interacts with salaries
  */
-function overBudgetEvent(){
+function budgetEvent(){
     let totalAnnualSalary = 0;
     for(let employee of employeeDataBase){
         totalAnnualSalary += Number(employee.annualSalary);
@@ -131,7 +126,7 @@ function overBudgetEvent(){
  Here we take the data applied to the employee number tag
     and subtract the salary from the totalAnnualSalary variable
 We then replace the monthly total text on the DOM,
-    remove the table row, and trigger our overBudgetEvent
+    remove the table row, and trigger our budgetEvent
     since we are messing with the totalAnnualSalary variable
 Then we will remove the employee from database;   ----->    ?? Was this a dumb use of a for..of.. loop? 
                                                             I know I could've use a for..in.. loop, but this seemed easier to read
@@ -145,41 +140,51 @@ function removeEmployee(){
             employeeDataBase.splice(index,  1);
         }
     }
-    overBudgetEvent();
+    budgetEvent();
 }
 
 
 
-//okay to reuse ID if removing old from DOM?
-//no, create new ID's then create toggle variable
-//make func reset table when togle off using click
+/**
+ Function allows user to edit the salary value in the database.
+    the if statements are making sure we're in 'editor mode' and that we're clicking proper buttons
+    otherwise if you click a toggle button while in editor mode itll assign the value to 
+    athe improper employee, so only one may be manipluated at a time
+ The first if 'opens editor mode' presenting an input box as well as a commit button.
+ The second if, once data has been entered into the input, will allow the 'commit' seciotion of 
+    this function to happen, editing data in the database and reredering the text, and giving back
+    the remove and edit buttons from before
+ The last if, just throws an error for the user.
+
+ In the future, this could be able to edit all inputs, and also hold the values for input as to not get mixed up 
+ */
 function editEmployee(){
-    if(!editorMode){
+    if(!editorMode && $(this).attr('class') === 'toggleEditMode'){
     $(this).parent()
         .siblings(".employeeSalary")
         .empty()
-        .append('<input class="editEmployeeFromDOM" type="number">');
+        .append('<input id="editEmployeeFromDOM" type="number">');
     $(this).parent()
         .empty()
         .append(`<button class="editButton">Commit</button>`);
         console.log('now able to edit');
     //Toggle for function to handle edit / commit buttons
     editorMode = true;
-    } else {
+    } else if(editorMode && $(this).attr('class') === 'editButton'){
         let currentEmployee;
-        let updatedEmployee = Number($('.editEmployeeFromDOM').val());
+        let updatedEmployee = Number($('#editEmployeeFromDOM').val());
         let employeeNumber = $(this).parents('tr').attr('id');
         for(let employee of employeeDataBase){
             if(employeeNumber === employee.employeeNumber){
-                employee.annualSalary = updatedEmployee
-                currentEmployee = employee
+                currentEmployee = employee;
+                currentEmployee.annualSalary = updatedEmployee;
             }
         }
         $(this).parent()
         .siblings(".employeeSalary")
         .empty()
         .text(`${formatter.format(currentEmployee.annualSalary)}`);
-    $(this).parent()
+        $(this).parent()
         .empty()
         .append(`<button class="removalButton"><svg 
                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -191,8 +196,10 @@ function editEmployee(){
                     <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
                     <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
                 </svg></button>`);
-        overBudgetEvent();
+        budgetEvent();
         editorMode = false;
+    } else {
+        window.alert('One at a Time!');
     }
 }
 
