@@ -226,7 +226,8 @@ function editEmployee(){
                             <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
                         </svg>
                     </button>`);
-            budgetEvent(Math.abs(oldSalary - updatedSalary));
+            budgetEvent(updatedSalary - oldSalary);
+            console.log(totalAnnualSalary);
         editorMode = false;
     } else {
         window.alert('One at a Time!');
