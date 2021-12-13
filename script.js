@@ -36,13 +36,17 @@ This function takes in values from DOM, adds them
      display function, passing the object
      to be rendered to DOM
  */
-function addEmployeeToDataBase(){
+function addEmployeeToDataBase(event, obj){
     event.preventDefault();
     for(let employee of employeeDataBase){
         if(Number($('#employeeNumberInput').val()) === Number(employee.employeeNumber)){
             window.alert('User Already Exists')
             return;
         }
+    }
+    if(obj !== undefined){
+        employeeDataBase.push(obj)
+        return;
     }
     let additionalEmployee = {
         firstName: $('#firsNameInput').val(),
@@ -63,10 +67,10 @@ function addEmployeeToDataBase(){
  There is a loop going through the database to collect data and generate to HTML,
     if the function is given an object, which it should everytime except on page load,
     it will convert it to an array, then it can be given to the for loop to be rendered to DOM.
-    (the for loop in only utilized on page load)
+    (the for loop will only be utilized on page load)
  The SVG tag contains a trash can item to be used as a button for removing employees
-    as well as a little document icon that is uded for editing
- There is also a .data() method being added to the <TR> tag. it utilizes the employee number
+    as well as a little document icon that is udes for the editing button
+ There is also a .data() method being added to the <TR> tag. it used the employee number
     as there should be no duplicates of these, and attached to it, is the salary of the 
     employee. This will be used to reduce the totalAnnualSalary in the event of employee removal.
  */
@@ -141,7 +145,7 @@ function budgetEvent(num){
 
 
 /**
-Function first calls dats attacheched to the employeesalary class,
+Function first calls data attacheched to the employeesalary class,
     using it to call our budget even which will update the dom with monthly cost
 then it loops through database searhing for matching ID numbers, 
     as there should be no duplicates, and deletes the employee from databse
@@ -152,14 +156,8 @@ function removeEmployee(){
         .parent()
         .siblings('td.employeeSalary')
         .data('salary'));
+    employeeDataBase.splice($(this).parents('tr').index(), 1)
     $(this).parents('tr').remove();
-    for(let index in employeeDataBase){
-        if(Number(employeeDataBase[index].employeeNumber) === $(this).parent()
-            .siblings('td.employeeNumber')
-            .data('employeenumber')){
-            employeeDataBase.splice(index,  1);
-        }
-    }
 }
 
 
